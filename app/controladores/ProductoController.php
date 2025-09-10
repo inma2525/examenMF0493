@@ -57,9 +57,9 @@ require_once(__DIR__ . '/../modelos/Producto.php');
                 $precio,
                 $stock,
                 $imagen_url,
-                0,
-                $this->bd,
                 $id_categoria,
+                0,
+                 $this->bd,
             );
 
             // Guardar en la base de datos

@@ -10,7 +10,7 @@
      private $id_categoria;
      
 
-     public function __construct($nombre_producto, $descripcion,$precio, $stock,$imagen_url,$bd,$id_categoria,$id = null) {
+     public function __construct($nombre_producto, $descripcion,$precio, $stock,$imagen_url,$id_categoria,$id = 0,$bd) {
          $this->id = $id;
          $this->nombre_producto = $nombre_producto;
          $this->descripcion = $descripcion;
@@ -22,17 +22,57 @@
      }
 
      // Método para guardar un producto en  la base de datos
-     public function guardar() {
+    /* public function guardar() {
         if (isset($this->id)) {
             // Actualizar producto existente
             $stmt = $this->bd->prepare("UPDATE productos SET nombre_producto = ? WHERE id = ?");
             return $stmt->execute([$this->nombre_producto, $this->id]);
         } else {
             // Insertar nuevo producto
-            $stmt = $this->bd->prepare("INSERT INTO productos (nombre_producto) VALUES (?)");
-            return $stmt->execute([$this->nombre_producto]);
+            $stmt = $this->bd->prepare("INSERT INTO productos (nombreProducto) VALUES (?)");
+            return $stmt->execute([$this->nombreProducto]);
         }
-     }
+     }*/
+
+     public function guardar() {
+    try {
+        if (isset($this->id)) {
+            // Actualizar producto existente
+            $stmt = $this->bd->prepare("
+                UPDATE productos 
+                SET nombre_producto = ?, descripcion = ?, precio = ?, stock = ?, imagen_url = ?, id_categoria = ? 
+                WHERE id = ?
+            ");
+            return $stmt->execute([
+                $this->nombre_producto,
+                $this->descripcion,
+                $this->precio,
+                $this->stock,
+                $this->imagen_url,
+                $this->id_categoria,
+                $this->id
+            ]);
+        } else {
+            // Insertar nuevo producto
+            $stmt = $this->bd->prepare("
+                INSERT INTO productos (nombre_producto, descripcion, precio, stock, imagen_url, id_categoria) 
+                VALUES (?, ?, ?, ?, ?, ?)
+            ");
+            return $stmt->execute([
+                $this->nombre_producto,
+                $this->descripcion,
+                $this->precio,
+                $this->stock,
+                $this->imagen_url,
+                $this->id_categoria
+            ]);
+        }
+    } catch (PDOException $e) {
+        error_log("Error al guardar producto: " . $e->getMessage());
+        return false;
+    }
+}
+
 
      // Método estático para obtener todos los productos
      public static function getTodos($bd) {
