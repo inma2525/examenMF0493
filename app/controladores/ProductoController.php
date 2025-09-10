@@ -39,6 +39,7 @@ require_once(__DIR__ . '/../modelos/Producto.php');
 
             // Manejar la subida de la imagen
             $imagen_url = null;
+            $idCategoria = $_POST['categoria'];
             if (isset($_FILES['imagen_url']) && $_FILES['imagen_url']['error'] === UPLOAD_ERR_OK) {
                 $uploadDir = __DIR__ . '/../../public/assests/';
                 $nombreArchivo = uniqid() . '_' . basename($_FILES['imagen_url']['name']);
@@ -57,7 +58,8 @@ require_once(__DIR__ . '/../modelos/Producto.php');
                 $stock,
                 $imagen_url,
                 0,
-                $this->bd
+                $this->bd,
+                $id_categoria,
             );
 
             // Guardar en la base de datos
